@@ -2,6 +2,11 @@
 
 This repository contains five hands-on labs designed for practitioners to understand and analyze the technical foundations and security aspects of blockchain-based systems, with a focus on both Ethereum and Hyperledger Fabric.
 
+## Disclaimer
+This lab is ongoing further development. As such, it is subject to change. 
+Probably, not all samples will be uploaded during this year (2024/2025), and will be uploaded/updated in 
+future iterations of the course.
+
 ## Lab Overview
 
 ### 1. Foundational Understanding of PKI
