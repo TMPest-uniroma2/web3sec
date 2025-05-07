@@ -1,0 +1,87 @@
+services:
+  ganache:
+    image: trufflesuite/ganache
+    container_name: ganache
+    ports:
+      - "8545:8545"
+    volumes:
+      - ./ethereum-lab/ganache:/ganache_data
+    entrypoint:
+      - node
+      - /app/dist/node/cli.js
+      - --db=/ganache_data
+      - --accounts=100
+      - --mnemonic
+      - 'minimum symptom minute gloom tragic situate silver mechanic salad amused elite beef'
+      - --networkId
+      - '1337'
+      - -h
+      - '0.0.0.0'
+      - -p
+      - '8545'
+    labels:
+      web3-security: "Ganache Blockchain Network"
+    networks:
+      - blockchain-net
+
+  walletlab:
+    build: ./ethereum-lab/node-app
+    container_name: walletlab
+    volumes:
+      - ./ethereum-lab/node-app:/usr/src/app
+      - ./ethereum-lab/node-app/artifacts:/usr/src/app/artifacts
+      - ./ethereum-lab/node-app/config:/usr/src/app/config
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    depends_on:
+      - ganache
+    links:
+      - "ganache:ganache"
+    networks:
+      - blockchain-net
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+    labels:
+      web3-security: "Contract Manager CLI"
+
+  mythril:
+    build: ./ethereum-mythril
+    container_name: mythril
+    volumes:
+      - ./ethereum-lab/mythril:/usr/src/app
+      - ./ethereum-lab/node-app/contracts:/usr/src/app/contracts
+    working_dir: /usr/src/app
+    depends_on:
+      - ganache
+    links:
+      - "ganache:ganache"
+    networks:
+      - blockchain-net
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+    labels:
+      web3-security: "Contract Auditor CLI"
+
+  react-app:
+    build: ./ethereum-lab/react-app
+    container_name: react-app
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_RPC_SERVER=${REACT_APP_RPC_SERVER}
+      - NODE_ENV=development
+    volumes:
+      - ./ethereum-lab/react-app:/usr/src/app
+      - ./ethereum-lab/node-app/artifacts:/usr/src/app/artifacts
+      - ./ethereum-lab/node-app/config:/usr/src/app/config
+    working_dir: /usr/src/app
+    command: >
+      bash -c 'while ! find /usr/src/app/artifacts -type f -name "*.json" | grep -q .; do sleep 1; done && cp -r artifacts/ src/ && cp -r config/ src/ && sleep 2 && ./setup.sh'
+    depends_on:
+      - ganache
+    labels:
+      web3-security: "React Web Frontend"
+    networks:
+      - blockchain-net
+
+networks:
+  blockchain-net:
+    driver: bridge
