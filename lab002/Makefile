@@ -147,12 +147,12 @@ test:
 
 audit:
 	@echo "[*] Static audit: $(CONTRACT)"
-	@docker exec mythril myth analyze contracts/$(CONTRACT) --solv 0.8.20 | jq .
+	@docker exec mythril myth analyze contracts/$(CONTRACT)
 	exit
 
 audit-live:
 	@echo "[+] Live audit on address: $(ADDRESS)"
-	@docker exec mythril myth analyze $(ADDRESS) -a http://ganache:8545 --rpc --execution-timeout 60 --max-depth 50 | jq .
+	@docker exec mythril myth analyze -a $(ADDRESS) -rpc http://ganache:8545 --rpc --execution-timeout 120 --max-depth 50
 	exit
 
 audit-all:
