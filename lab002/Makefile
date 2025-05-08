@@ -43,6 +43,11 @@ up:
 	docker-compose up -d ganache walletlab
 	exit
 
+# Start Ganache and Walletlab
+up-audit:
+	docker-compose up -d mythril
+	exit
+
 # Compile contracts inside Walletlab container
 compile:
 	$(call walletlab,compile)
@@ -141,13 +146,13 @@ test:
 	exit
 
 audit:
-	@echo "[*] Static audit: $(CONTRACT).sol"
-	@docker exec mythril myth analyze contracts/$(CONTRACT).sol --solv 0.8.20 --output json | jq .
+	@echo "[*] Static audit: $(CONTRACT)"
+	@docker exec mythril myth analyze contracts/$(CONTRACT) --solv 0.8.20 | jq .
 	exit
 
 audit-live:
 	@echo "[+] Live audit on address: $(ADDRESS)"
-	@docker exec mythril myth analyze $(ADDRESS) -a http://ganache:8545 --rpc --execution-timeout 60 --max-depth 50 --output json | jq .
+	@docker exec mythril myth analyze $(ADDRESS) -a http://ganache:8545 --rpc --execution-timeout 60 --max-depth 50 | jq .
 	exit
 
 audit-all:

@@ -44,7 +44,7 @@ services:
       web3-security: "Contract Manager CLI"
 
   mythril:
-    build: ./ethereum-mythril
+    build: ./ethereum-lab/mythril
     container_name: mythril
     volumes:
       - ./ethereum-lab/mythril:/usr/src/app
