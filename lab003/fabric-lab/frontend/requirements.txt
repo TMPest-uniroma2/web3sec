@@ -1,0 +1,3 @@
+flask
+fabric-sdk-py
+python-dotenv
