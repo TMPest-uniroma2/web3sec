@@ -40,6 +40,7 @@ build-containers:
 
 # Start Ganache and Walletlab
 up:
+	@sudo rm -rf ethereum-lab/ganache/*
 	docker-compose up -d ganache walletlab
 	exit
 
@@ -147,7 +148,7 @@ test:
 
 generate-certificate:
 	@echo "[*] Generating certificates"
-	@docker-compose up python-ca-manager -d
+	@docker-compose up python-ca-manager
 	exit
 
 proxy-up:
