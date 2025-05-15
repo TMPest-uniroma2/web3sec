@@ -105,7 +105,9 @@ services:
       - python-ca-manager
     volumes:
       - ./ethereum-lab/nginx/certs:/etc/nginx/certs
-      - ./ethereum-lab/nginx/nginx.conf:/etc/nginx/conf.d/ssl-proxy.conf
+      - type: bind
+        source: ./ethereum-lab/nginx/nginx.conf
+        target: /etc/nginx/conf.d/ssl-proxy.conf
     ports:
       - "443:443"
     restart: always
