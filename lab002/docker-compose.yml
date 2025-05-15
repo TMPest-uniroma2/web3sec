@@ -82,6 +82,38 @@ services:
     networks:
       - blockchain-net
 
+  python-ca-manager:
+    image: python:3.12
+    container_name: camanager
+    working_dir: /usr/src/app
+    volumes:
+      - ./camanager:/usr/src/app
+      - ./nginx/certs:/usr/src/app/certs
+    networks:
+      - blockchain-net
+    command: >
+      bash -c "pip3 install --root-user-action 'ignore' camanager@git+https://github.com/klezVirus/camanager && camanager native -o certs -c config.ini"
+    labels:
+      web3-security: "PKI Manager"
+
+  nginx-proxy:
+    image: nginx:latest
+    container_name: proxy.web3sec.local
+    depends_on:
+      - ganache
+      - react-app
+      - python-ca-manager
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/ssl-proxy.conf
+    ports:
+      - "443:443"
+    restart: always
+    networks:
+      - blockchain-net
+    labels:
+      web3-security: "Reverse Proxy"
+
 networks:
   blockchain-net:
     driver: bridge

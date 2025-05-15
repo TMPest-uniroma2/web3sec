@@ -145,6 +145,21 @@ test:
 	$(call wltest,test/test-multisig.js)
 	exit
 
+generate-certificate:
+	@echo "[*] Generating certificates"
+	@docker-compose up python-ca-manager -d
+	exit
+
+proxy-up:
+	@echo "[*] Spinning up reverse proxy"
+	@docker-compose up nginx-proxy -d
+	exit
+
+proxy-down:
+	@echo "[*] Stopping reverse proxy"
+	@docker-compose down nginx-proxy
+	exit
+
 audit:
 	@echo "[*] Static audit: $(CONTRACT)"
 	@docker exec mythril myth analyze contracts/$(CONTRACT)
@@ -161,6 +176,11 @@ audit-all:
 		echo "\n  [>] Analyzing $$f"; \
 		docker exec mythril myth analyze $$f --solv 0.8.20 --output json | jq .; \
 	done
+	exit
+
+# Stop all
+down:
+	docker-compose down -v
 	exit
 
 # Rebuild all
