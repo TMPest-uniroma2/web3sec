@@ -87,8 +87,8 @@ services:
     container_name: camanager
     working_dir: /usr/src/app
     volumes:
-      - ./camanager:/usr/src/app
-      - ./nginx/certs:/usr/src/app/certs
+      - ./ethereum-lab/camanager:/usr/src/app
+      - ./ethereum-lab/nginx/certs:/usr/src/app/certs
     networks:
       - blockchain-net
     command: >
@@ -104,8 +104,8 @@ services:
       - react-app
       - python-ca-manager
     volumes:
-      - ./nginx/certs:/etc/nginx/certs
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/ssl-proxy.conf
+      - ./ethereum-lab/nginx/certs:/etc/nginx/certs
+      - ./ethereum-lab/nginx/nginx.conf:/etc/nginx/conf.d/ssl-proxy.conf
     ports:
       - "443:443"
     restart: always
