@@ -183,7 +183,7 @@ fw-on:
 	bash -c "./ethereum-lab/fw/firewall.sh on"
 	exit
 
-fw-uff:
+fw-off:
 	bash -c "./ethereum-lab/fw/firewall.sh off"
 	exit
 
