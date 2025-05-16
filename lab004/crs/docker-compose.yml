@@ -105,7 +105,9 @@ services:
         - python-ca-manager
       volumes:
         - ./nginx-modsec/certs:/etc/nginx/certs
-        - ./nginx-modsec/nginx.conf:/etc/nginx/templates/conf.d/default.conf.template
+        - type: bind
+          source: ./ethereum-lab/nginx/nginx.conf
+          target: /etc/nginx/templates/conf.d/default.conf.template
       ports:
         - "443:443"
       restart: always

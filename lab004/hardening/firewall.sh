@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Network and ports configuration
-DOCKER_SUBNET="172.20.0.0/16"
+mapfile -t DOCKER_SUBNETS < <(sudo docker network ls | awk '{print $1}' | grep -v NETWORK | xargs -I{}  sudo docker network inspect {} | grep -i subnet | grep -oP "[\d\.\/]+")
 NGINX_PORT=443
-SERVICES_PORTS=(27017 4001 5000 5001 8080 7545 5555 6666)  # MongoDB, IPFS, Ganache, Verification, Secrets
+SERVICES_PORTS=(3000 8545)  # React, Ganache
 
 # Helper function to add rules
 apply_rules() {
@@ -23,8 +23,10 @@ apply_rules() {
     done
 
     # Allow Docker subnet access for inter-container communication
-    sudo iptables -A DOCKER-USER -s "$DOCKER_SUBNET" -j ACCEPT
-    echo "Allowed internal Docker network access for subnet $DOCKER_SUBNET"
+    for DOCKER_SUBNET in "${DOCKER_SUBNETS[@]}"; do
+      sudo iptables -A DOCKER-USER -s "$DOCKER_SUBNET" -j ACCEPT
+      echo "Allowed internal Docker network access for subnet $DOCKER_SUBNET"
+    done
 
     # Set default DROP rule for DOCKER-USER chain
     sudo iptables -A DOCKER-USER -j RETURN
