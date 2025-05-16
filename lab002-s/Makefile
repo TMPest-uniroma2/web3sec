@@ -173,10 +173,18 @@ audit-live:
 
 audit-all:
 	@echo "[*] Auditing all Solidity contracts in ./contracts/"
-	@for f in $$(ls ./node-app/contracts/*.sol); do \
+	@for f in $$(ls ./ethereum-lab/node-app/contracts/*.sol); do \
 		echo "\n  [>] Analyzing $$f"; \
 		docker exec mythril myth analyze $$f --solv 0.8.20 --output json | jq .; \
 	done
+	exit
+
+fw-on:
+	bash -c "./ethereum-lab/fw/firewall.sh on"
+	exit
+
+fw-uff:
+	bash -c "./ethereum-lab/fw/firewall.sh off"
 	exit
 
 # Stop all
