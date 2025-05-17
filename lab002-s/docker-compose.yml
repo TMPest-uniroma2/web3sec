@@ -97,7 +97,7 @@ services:
       web3-security: "PKI Manager"
 
   nginx-proxy:
-    image: owasp/modsecurity-crs
+    image: owasp/modsecurity-crs:nginx
     container_name: proxy.web3sec.local
     depends_on:
       - ganache
